@@ -1,34 +1,62 @@
-import React from "react";
-import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { View, FlatList } from "react-native";
+import { useEffect, useRef } from "react";
+import { useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
-import { urlFor } from "../../../sanity";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
-const DefaultImg = require("../../../assets/favicon.png");
+import Header from "./header";
+import TabCard from "../../components/TabCard";
+import Basket from "../../components/Basket";
+import { setRestaurant } from "../../../redux/features/restaurantSlice";
 
 const RestaurantScreen = () => {
-  const navigation = useNavigation();
   const route = useRoute();
-  const { id, img, title, rating, genre, address, descr, dishes, long, lat } =
+  const { id, img, title, rating, address, descr, dishes, long, lat } =
     route.params;
+  const dispatch = useDispatch();
+  const dataRef = useRef(false);
+
+  useEffect(() => {
+    if (dataRef.current) return;
+    dataRef.current = true;
+    dispatch(setRestaurant(route.params));
+  }, []);
 
   return (
-    <ScrollView>
-      <View className="relative">
-        <Image
-          source={img ? { uri: urlFor(img).url() } : DefaultImg}
-          className=" w-full h-56 bg-gray-300 pb-4"
-        />
-        <TouchableOpacity
-          className="absolute top-14 left-5 p-2 bg-gray-200 rounded-full"
-          activeOpacity={0.6}
-          onPress={navigation.goBack}
-        >
-          <ArrowLeftIcon color="#00CCBB" size={20} />
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <View key={id}>
+      {/* Basket modal */}
+      <Basket />
+
+      {/* Dishes row */}
+      <FlatList
+        contentContainerStyle={{ paddingBottom: 120 }}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <Header
+            img={img}
+            title={title}
+            rating={rating}
+            address={address}
+            description={descr}
+          />
+        }
+        data={dishes ? dishes : []}
+        renderItem={RenderDishes}
+        keyExtractor={(_) => _?._id}
+      />
+    </View>
   );
 };
 
 export default RestaurantScreen;
+
+// Item of list
+const RenderDishes = ({ item }) =>
+  item && (
+    <TabCard
+      id={item._id}
+      name={item.name}
+      descr={item.description}
+      price={item.price}
+      image={item.image}
+    />
+  );

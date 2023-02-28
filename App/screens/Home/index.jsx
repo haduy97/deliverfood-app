@@ -28,7 +28,7 @@ const HomeScreen = () => {
     <ListRow
       // id={item._id}
       title={item.name}
-      description={item.description}
+      descr={item.description}
       list={item.restaurants}
     />
   );

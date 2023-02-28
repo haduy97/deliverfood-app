@@ -6,22 +6,17 @@ import { urlFor } from "../../../sanity";
 import BigCard from "../BigCard";
 
 const ListRow = (props) => {
-  const { title, description, list } = props;
-  const RenderCard = ({ item }) => (
-    <BigCard
-      id={item?._id}
-      img={item && urlFor(item.image).url()}
-      title={item?.name}
-      rating={item?.rating}
-      genre={item?.type.name}
-      address={item?.address}
-      descr={item?.description}
-      dishes={item?.dishes}
-      long={item?.long}
-      lat={item?.lat}
-    />
-  );
-
+  const { title, descr, list } = props;
+  const RenderCard = ({ item }) =>
+    item && (
+      <BigCard
+        id={item?._id}
+        img={item && urlFor(item.image).url()}
+        title={item?.name}
+        rating={item?.rating}
+        address={item?.address}
+      />
+    );
   return (
     <View>
       {/* Head */}
@@ -29,9 +24,7 @@ const ListRow = (props) => {
         <Text className="font-bold text-lg">{title ? title : ""}</Text>
         <ArrowRightIcon color="#00CCBB" />
       </View>
-      <Text className="text-xs text-gray-500 px-4">
-        {description ? description : ""}
-      </Text>
+      <Text className="text-xs text-gray-500 px-4">{descr ? descr : ""}</Text>
 
       {/* Restaurant Cards */}
       <FlatList
