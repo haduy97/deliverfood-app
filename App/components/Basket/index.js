@@ -20,7 +20,7 @@ const Basket = () => {
   const goToBasket = () => {
     navigation.navigate("Basket", {});
   };
-  console.log("hahaha");
+
   if (!items.length > 0) return;
   return (
     <View className="absolute bottom-10 w-full z-50">
